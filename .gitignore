@@ -1,0 +1,23 @@
+.venv
+venv/
+.python_version
+.python-version
+__pycache__
+work_dirs/
+slurm-*.out
+slurm*.out
+*.pt
+*.pth
+*.ckpt
+
+# Python build
+dist/
+build/
+*.egg-info/
+*.egg
+
+# Env markers
+.env_installed*.ok
+
+# Backups
+*.save

@@ -1,0 +1,17 @@
+# OpenMMLab stack (repo GCC-Net / MMDet 2.x)
+#mmcv-full==1.6.0
+# mmdet : on l’installe en editable depuis le repo, pas ici
+
+# COCO + utilitaires mmdet
+pycocotools==2.0.7
+terminaltables==3.1.10
+six==1.17.0
+PyYAML==6.0.3
+numpy==1.24.4
+opencv-python==4.12.0.88
+matplotlib==3.7.5
+yapf==0.32.0
+scipy==1.10.1
+
+
+
