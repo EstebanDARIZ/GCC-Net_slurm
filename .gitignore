@@ -21,3 +21,5 @@ build/
 
 # Backups
 *.save
+*.swp
+*.swo
