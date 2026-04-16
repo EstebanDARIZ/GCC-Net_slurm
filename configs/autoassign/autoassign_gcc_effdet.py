@@ -132,3 +132,15 @@ optimizer = dict(
 lr_config = dict(warmup_iters=1000, step=[27, 33])
 runner = dict(max_epochs=30)
 find_unused_parameters = True
+
+log_config = dict(
+    interval=50,
+    hooks=[
+        dict(type='TextLoggerHook'),
+        dict(
+            type='MlflowLoggerHook',
+            exp_name='GCC-Net_effdet',
+            log_model=False,
+            interval=50)
+    ])
+

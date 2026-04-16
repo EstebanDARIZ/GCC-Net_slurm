@@ -34,7 +34,7 @@ REQ_SHA=$(sha256sum requirements.txt | awk '{print $1}')
 MARKER_FILE=".env_installed_${REQ_SHA}.ok"
 
 if [ ! -f "${MARKER_FILE}" ]; then
-  python -m pip install -U pip wheel setuptools
+  python -m pip install -U pip wheel
 
   python -m pip install torch==1.7.0+cu101 torchvision==0.8.1+cu101 \
     -f https://download.pytorch.org/whl/torch_stable.html
@@ -44,6 +44,7 @@ if [ ! -f "${MARKER_FILE}" ]; then
 
   python -m pip install -r requirements.txt
   python -m pip install -e .
+  python -m pip install mlflow
 
   # nettoyage anciens markers
   rm -f .env_installed_*.ok
