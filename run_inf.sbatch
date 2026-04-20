@@ -63,8 +63,8 @@ fi
 
 
 python tools/inference.py \
-    /Utilisateurs/edreau01/GCC-Net/configs/autoassign/autoassign_r50_fpn_8x2_3x_gcc_custom.py \
-    /Utilisateurs/edreau01/GCC-Net/work_dirs/autoassign_r50_fpn_8x2_3x_gcc_custom_dataset_sam_1.0/epoch_30.pth \
-    /Utilisateurs/edreau01/datasets/dataset_test_2.1/dataset_test_2.1/images \
-    /Utilisateurs/edreau01/GCC-Net/work_dirs/autoassign_r50_fpn_8x2_3x_gcc_custom_dataset_sam_1.0/res_test_2.1_2 \
-    --score-thr 0.5
+    /Utilisateurs/edreau01/GCC-Net/configs/autoassign/autoassign_gcc_sam.py \
+    /Utilisateurs/edreau01/GCC-Net/work_dirs/autoassign_gcc_sam/latest.pth \
+    /Utilisateurs/edreau01/datasets/dataset_test_3.0 \
+    /Utilisateurs/edreau01/GCC-Net/work_dirs/autoassign_gcc_sam/res_test_3.0 \
+    --score-thr 0.1
