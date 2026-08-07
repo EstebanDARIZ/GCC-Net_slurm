@@ -37,15 +37,20 @@ def parse_args():
         default=0,
         help='ID du GPU à utiliser (défaut: 0)')
     parser.add_argument(
+        '--device',
+        default=None,
+        help='Device à utiliser : "cpu", "cuda:0", etc. Écrase --gpu-id si spécifié.')
+    parser.add_argument(
         '--no-annotated-imgs',
         action='store_true',
         help='Désactiver la sauvegarde des images annotées')
     return parser.parse_args()
 
 
-def load_model(config_path, checkpoint_path, gpu_id=0):
+def load_model(config_path, checkpoint_path, gpu_id=0, device=None):
     """Charge le modèle GCC-Net depuis la config et le checkpoint."""
-    device = f'cuda:{gpu_id}'
+    if device is None:
+        device = f'cuda:{gpu_id}'
     print(f"[INFO] Chargement du modèle sur {device}...")
 
     cfg = Config.fromfile(config_path)
@@ -201,12 +206,15 @@ def main():
     assert osp.isfile(args.config),     f"Config introuvable : {args.config}"
     assert osp.isfile(args.checkpoint), f"Checkpoint introuvable : {args.checkpoint}"
     assert osp.isdir(args.input_dir),   f"Dossier d'entrée introuvable : {args.input_dir}"
-    assert torch.cuda.is_available(),   "CUDA non disponible ! Vérifiez votre installation PyTorch/CUDA."
+    device = args.device if args.device else f'cuda:{args.gpu_id}'
+    if device.startswith('cuda') and not torch.cuda.is_available():
+        print("[WARN] CUDA non disponible, basculement sur CPU.")
+        device = 'cpu'
 
     os.makedirs(args.output_dir, exist_ok=True)
 
     # Chargement du modèle
-    model, device = load_model(args.config, args.checkpoint, args.gpu_id)
+    model, device = load_model(args.config, args.checkpoint, args.gpu_id, device)
 
     # Récupération des images
     img_paths = get_image_paths(args.input_dir)

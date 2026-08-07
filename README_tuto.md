@@ -2,6 +2,10 @@
 
 This document explains how to train, evaluate and run inference with GCC-Net in this repository.
 
+Pour utiliser le venv du repo GCC-Net, il faut faire :
+source /home/esteban-dreau-darizcuren/doctorat/code/detector/GCC-Net/.venv/bin/activate
+
+
 ## Data layout & preparation
 Expected layout (example):
 ```
@@ -73,4 +77,13 @@ Outputs:
 - optional result files for submission
 
 ---
+
+
+
+python tools/inference.py \
+    /home/esteban-dreau-darizcuren/doctorat/code/detector/GCC-Net_slurm/configs/autoassign/autoassign_gcc_sam.py \
+    /home/esteban-dreau-darizcuren/doctorat/code/detector/GCC-Net_slurm/latest.pth\
+    /home/esteban-dreau-darizcuren/doctorat/dataset/datasets_test/dataset_test_3.0 \
+    /home/esteban-dreau-darizcuren/doctorat/code/detector/GCC-Net_slurm/work_dirs/autoassign_gcc_sam/res_test_3.0 \
+    --score-thr 0.5
 
