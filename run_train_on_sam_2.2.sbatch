@@ -1,11 +1,11 @@
 #!/bin/bash
-#SBATCH --job-name=GCC-net_test
+#SBATCH --job-name=train_GCC-net_on_sam_2.2
 #SBATCH --partition=gpu-2080ti
 #SBATCH --qos=normal
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --cpus-per-task=8
-#SBATCH --mem=48G
+#SBATCH --cpus-per-task=16
+#SBATCH --mem=96G
 #SBATCH --time=72:00:00
 #SBATCH --mail-user=esteban.dreaudariz@gmail.com
 #SBATCH --mail-type=ALL
@@ -20,29 +20,21 @@ PYTHON_VERSION=3.8.18
 ENVIRONMENT_NAME="gccnet_env"
 
 module load Anaconda3
-# You need this to be able to use the 'conda' command. I am not satisfied with this solution,>
 source /opt/easybuild/software/Anaconda3/2024.02-1/etc/profile.d/conda.sh
 
-
-# if the environment does not exist, create it
+# Si l'environnement n'existe pas, le créer
 if ! conda info --envs | grep -q "^${ENVIRONMENT_NAME}"; then
   conda create -n ${ENVIRONMENT_NAME} python=${PYTHON_VERSION} -y
 fi
 
 conda activate ${ENVIRONMENT_NAME}
 
-
-
-# Install python packages, either individually or using a requirements.txt file.
-# pip install scipy matplotlib
-# or
-
-# Install deps only once 
+# Installer les dépendances une seule fois
 REQ_SHA=$(sha256sum requirements.txt | awk '{print $1}')
 MARKER_FILE=".env_installed_${REQ_SHA}.ok"
 
 if [ ! -f "${MARKER_FILE}" ]; then
-  python -m pip install -U pip wheel setuptools
+  python -m pip install -U pip wheel
 
   python -m pip install torch==1.7.0+cu101 torchvision==0.8.1+cu101 \
     -f https://download.pytorch.org/whl/torch_stable.html
@@ -52,19 +44,17 @@ if [ ! -f "${MARKER_FILE}" ]; then
 
   python -m pip install -r requirements.txt
   python -m pip install -e .
+  python -m pip install mlflow
 
   # nettoyage anciens markers
   rm -f .env_installed_*.ok
   touch "${MARKER_FILE}"
 fi
 
+### Entraînement sur dataset_sam_2.2 (8 classes, Tuna retiré) — 3 GPUs distribué
+# bash tools/dist_train.sh configs/autoassign/autoassign_gcc_sam_2.2.py 3
 
-
-
-
-python -u tools/inference.py \
-    /Utilisateurs/edreau01/GCC-Net/configs/autoassign/autoassign_gcc_sam_2.2.py \
-    /Utilisateurs/edreau01/GCC-Net/work_dirs/autoassign_gcc_sam_2.2/epoch_30.pth \
-    /Utilisateurs/edreau01/datasets/dataset_test_4.2 \
-    /Utilisateurs/edreau01/GCC-Net/work_dirs/autoassign_gcc_sam_2.2/res_test_4.2 \
-    --score-thr 0.1
+### Reprise depuis un checkpoint (décommenter si besoin)
+bash tools/dist_train.sh configs/autoassign/autoassign_gcc_sam_2.2.py 3 \
+ --resume-from work_dirs/autoassign_gcc_sam_2.2/epoch_24.pth \
+ --cfg-options evaluation.interval=5
