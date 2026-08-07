@@ -1,6 +1,17 @@
-# OpenMMLab stack (repo GCC-Net / MMDet 2.x)
-#mmcv-full==1.6.0
-# mmdet : on l’installe en editable depuis le repo, pas ici
+# OpenMMLab stack (repo GCC-Net / MMDet 2.24.1)
+# Cible : cluster Slurm, GPU 2080Ti (sm_75) ou A40 (sm_86).
+# cu113 couvre les deux (CUDA >= 11.1 requis pour sm_86, rétrocompatible avec sm_75).
+# En local (CPU-only) ces mêmes wheels s'installent et tournent sans CUDA, juste
+# sans accélération GPU.
+--find-links https://download.pytorch.org/whl/torch_stable.html
+torch==1.12.1+cu113
+torchvision==0.13.1+cu113
+
+# mmcv_maximum_version de ce fork mmdet est 1.6.0 (voir mmdet/__init__.py) :
+# ne pas monter mmcv-full au-delà sans aussi relever cette borne.
+--find-links https://download.openmmlab.com/mmcv/dist/cu113/torch1.12.0/index.html
+mmcv-full==1.6.0
+# mmdet : on l'installe en editable depuis le repo, pas ici
 
 # COCO + utilitaires mmdet
 pycocotools==2.0.7
@@ -12,6 +23,3 @@ opencv-python==4.12.0.88
 matplotlib==3.7.5
 yapf==0.32.0
 scipy==1.10.1
-
-
-
