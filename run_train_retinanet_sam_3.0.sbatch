@@ -35,6 +35,16 @@ MARKER_FILE=".env_installed_${REQ_SHA}.ok"
 
 if [ ! -f "${MARKER_FILE}" ]; then
   python -m pip install -U pip wheel
+
+  # mmcv-full ships precompiled CUDA extensions tied to a specific torch/CUDA
+  # build, but its own version string (e.g. "1.6.0") doesn't encode that build.
+  # pip only compares version numbers, so if a stale mmcv-full is already
+  # installed for an older torch/CUDA, `pip install -r requirements.txt` will
+  # see it as "already satisfied" and silently leave the mismatched binary in
+  # place (ImportError on libcudart.so.<old-version> at import time). Force an
+  # uninstall first so it always gets reinstalled against the current pin.
+  python -m pip uninstall -y mmcv-full
+
   python -m pip install -r requirements.txt
   python -m pip install -e .
   python -m pip install mlflow
