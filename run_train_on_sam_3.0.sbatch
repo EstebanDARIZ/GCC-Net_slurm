@@ -35,13 +35,6 @@ MARKER_FILE=".env_installed_${REQ_SHA}.ok"
 
 if [ ! -f "${MARKER_FILE}" ]; then
   python -m pip install -U pip wheel
-
-  python -m pip install torch==1.12.1+cu113 torchvision==0.13.1+cu113 \
-    -f https://download.pytorch.org/whl/torch_stable.html
-
-  python -m pip install mmcv-full==1.6.0 \
-    -f https://download.openmmlab.com/mmcv/dist/cu113/torch1.12.0/index.html
-
   python -m pip install -r requirements.txt
   python -m pip install -e .
   python -m pip install mlflow
