@@ -5,6 +5,11 @@ _base_ = [
     '../../_base_/datasets/custom_dataset_sam_3.0.py',
     '../../_base_/schedules/schedule_1x.py', '../../_base_/default_runtime.py'
 ]
+
+# Fine-tuning depuis les poids RetinaNet+FPN pré-entraînés sur COCO (comme
+# pour faster_rcnn_sam_3.0.py) plutôt que depuis un backbone ImageNet seul.
+load_from = 'https://download.openmmlab.com/mmdetection/v2.0/retinanet/retinanet_r50_fpn_1x_coco/retinanet_r50_fpn_1x_coco_20200130-c2398f9e.pth'
+
 model = dict(
     bbox_head=dict(num_classes=9))
 
