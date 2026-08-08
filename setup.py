@@ -109,7 +109,12 @@ def parse_requirements(fname='requirements.txt', with_version=True):
         with open(fpath, 'r') as f:
             for line in f.readlines():
                 line = line.strip()
-                if line and not line.startswith('#'):
+                # Skip blank lines, comments, and pip directives like
+                # `--find-links <url>` (not a package requirement, and not
+                # a valid PEP 508 specifier -- newer setuptools rejects it
+                # in extras_require, unlike `pip install -r` which handles
+                # it fine).
+                if line and not line.startswith('#') and not line.startswith('--'):
                     for info in parse_line(line):
                         yield info
 
